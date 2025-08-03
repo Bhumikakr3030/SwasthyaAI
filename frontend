@@ -2,195 +2,115 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SwasthyaAI – Smart Health Assistant</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Dialogflow -->
-  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-
-  <!-- Custom Style -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SwasthyaAI Login</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      background: #f9f9f9;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    #chatbox {
-      width: 100%;
-      height: 400px;
-      background: #f1f1f1;
+
+    .login-container {
+      background-color: #fff;
+      padding: 30px 40px;
       border-radius: 10px;
-      padding: 15px;
-      overflow-y: auto;
-      margin-bottom: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
     }
-    .user-message {
-      text-align: right;
-      color: #2563eb;
-      margin-top: 5px;
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 20px;
     }
-    .bot-message {
-      text-align: left;
-      color: #374151;
-      margin-top: 5px;
+
+    .login-header img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
     }
-    input[type="text"] {
-      width: 80%;
+
+    .login-header h2 {
+      margin-top: 10px;
+      color: #d32f2f;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: 6px;
+      font-size: 14px;
     }
-    button {
-      padding: 10px 16px;
-      background: #2563eb;
+
+    .btn-red {
+      width: 100%;
+      background-color: #d32f2f;
       color: white;
+      padding: 12px;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
+      margin-top: 20px;
+      font-weight: 600;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
-    button:hover {
-      background: #1e40af;
+
+    .btn-red:hover {
+      background-color: #b71c1c;
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .login-footer a {
+      color: #d32f2f;
+      text-decoration: none;
+    }
+
+    .login-footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
-
-<body class="bg-gray-50 font-sans">
-  <div class="flex min-h-screen">
-
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-md hidden md:block">
-      <div class="p-6 flex items-center space-x-2">
-        <img src="C:\Users\DELL\Pictures\swa.jpg" alt="Logo" class="w-8 h-8 rounded-full" />
-        <span class="text-xl font-bold text-red-600">SwasthyaAI</span>
-      </div>
-      <nav class="p-4 space-y-3">
-        <a href="#" class="block text-gray-700 hover:text-red-500">Dashboard</a>
-        <a href="#symptom-section" class="block text-gray-700 hover:text-red-500">Symptom Checker</a>
-        <a href="#doctor-section" class="block text-gray-700 hover:text-red-500">Find Doctor</a>
-        <a href="#chatbot-section" class="block text-gray-700 hover:text-red-500">AI Assistant</a>
-      </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-1 p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <!-- Welcome Section -->
-        <div class="col-span-1 md:col-span-2 bg-white p-6 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center">
-          <div>
-            <h2 class="text-2xl font-bold">Welcome to SwasthyaAI</h2>
-            <p class="text-gray-600 mt-2">An AI-powered health assistant for smart, accessible, and early diagnosis. Built for India.</p>
-            <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Get Started</button>
-          </div>
-          <img src="C:\Users\DELL\Pictures\swa.jpg" alt="SwasthyaAI Logo" class="w-24 h-24 object-cover border border-gray-300 rounded">
-        </div>
-
-        <!-- Symptom Checker -->
-        <div id="symptom-section" class="bg-white p-6 rounded-xl shadow-md col-span-1 md:col-span-2">
-          <h3 class="text-xl font-semibold mb-4">Symptom Checker (Text + NLP)</h3>
-          <form id="symptomForm" class="space-y-4">
-            <textarea class="w-full p-3 border rounded-md" placeholder="Describe your symptoms (e.g., cough, fever, fatigue)..."></textarea>
-            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Analyze Symptoms</button>
-          </form>
-          <p id="symptomResult" class="mt-4 text-gray-700"></p>
-        </div>
-
-        <!-- Doctor Finder -->
-        <div id="doctor-section" class="bg-white p-6 rounded-xl shadow-md col-span-1 md:col-span-2">
-          <h3 class="text-xl font-semibold mb-4">Find Nearby Doctors in Bangalore</h3>
-          <button onclick="findDoctors()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Search</button>
-          <ul id="doctorList" class="mt-4 text-gray-700 space-y-3"></ul>
-        </div>
-
-        <!-- AI Chatbot Section -->
-        <div id="chatbot-section" class="bg-white p-6 rounded-xl shadow-md col-span-1 md:col-span-2">
-          <h3 class="text-xl font-semibold mb-4">AI Health Assistant (Chatbot)</h3>
-	<div class="w-full h-96 bg-white border rounded-xl overflow-y-auto p-4 space-y-2" id="chatbox">
-  <div class="text-sm text-gray-700">👩‍⚕️ SwasthyaAI: Hi! How can I help you today?</div>
-</div>
-<form onsubmit="sendMessage(event)" class="mt-2 flex gap-2">
-  <input type="text" id="userInput" class="flex-1 p-2 border rounded" placeholder="Type your message..." required />
-  <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Send</button>
-</form>
-
-<script>
-  function sendMessage(e) {
-    e.preventDefault();
-    const input = document.getElementById('userInput');
-    const chatbox = document.getElementById('chatbox');
-
-    const userText = input.value.trim();
-    if (!userText) return;
-
-    chatbox.innerHTML += `<div class="text-sm text-blue-600 text-right">You: ${userText}</div>`;
-    setTimeout(() => {
-      chatbox.innerHTML += `<div class="text-sm text-gray-700">👩‍⚕️ SwasthyaAI: Thank you! Let me think...</div>`;
-      chatbox.scrollTop = chatbox.scrollHeight;
-    }, 600);
-
-    input.value = "";
-    chatbox.scrollTop = chatbox.scrollHeight;
-  }
-</script>
-
-          <!-- Option: Dialogflow Messenger -->
-          <df-messenger
-            intent="WELCOME"
-            chat-title="SwasthyaAI"
-            agent-id="YOUR-AGENT-ID"
-            language-code="en">
-          </df-messenger>
-        </div>
-
-      </div>
-    </main>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <img src="C:\Users\DELL\Pictures\swa.jpg" alt="Logo" />
+      <h2>SwasthyaAI Login</h2>
+    </div>
+    <form action="dashboard.html" method="post">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required />
+      
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
+      
+      <button type="submit" class="btn-red">Login</button>
+    </form>
+    <div class="login-footer">
+      Don't have an account? <a href="#">Sign up</a>
+    </div>
   </div>
-
-  <!-- Embedded Doctor JSON -->
-  <script id="doctor-data" type="application/json">
-  [
-    { "name": "Dr. Meena Rao", "specialization": "Cardiologist", "location": "Indiranagar" },
-    { "name": "Dr. Ravi Kumar", "specialization": "Dermatologist", "location": "HSR Layout" },
-    { "name": "Dr. Neha Patil", "specialization": "Pediatrician", "location": "Koramangala" }
-  ]
-  </script>
-
-  <!-- JavaScript Logic -->
-  <script>
-    // Doctor Finder Logic
-    async function findDoctors() {
-      const doctorList = document.getElementById("doctorList");
-      doctorList.innerHTML = "<li>Loading...</li>";
-
-      const json = document.getElementById("doctor-data").textContent;
-      const doctors = JSON.parse(json);
-
-      await new Promise(r => setTimeout(r, 1000)); // simulate delay
-
-      doctorList.innerHTML = doctors.map(doc =>
-        `<li class="p-3 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition">
-          <strong>${doc.name}</strong><br/>
-          ${doc.specialization} — ${doc.location}
-        </li>`
-      ).join("");
-    }
-
-    // Symptom Checker Logic
-    document.getElementById("symptomForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const input = this.querySelector("textarea").value.trim();
-      const result = document.getElementById("symptomResult");
-
-      if (!input) {
-        result.textContent = "Please describe your symptoms.";
-        return;
-      }
-
-      result.textContent = "Based on your input, possible condition: Mild Viral Infection. Suggest: Home rest, hydration, consult if symptoms persist.";
-    });
-  </script>
 </body>
 </html>
